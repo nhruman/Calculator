@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!-- ============================================================
+  Noman Calculator - index.html
+  This is the ONLY page of the app. It holds the structure
+  (the skeleton). Style lives in css/style.css and the
+  behaviour lives in the js/ folder.
+============================================================= -->
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <!-- viewport-fit=cover lets the app use the full screen on iPhones with a notch -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Noman Calculator</title>
+  <meta name="description" content="A premium offline calculator. Designed &amp; Developed by Noman MD." />
+
+  <!-- Theme color = colour of the browser/status bar. theme.js updates it when the theme changes -->
+  <meta name="theme-color" content="#0B1020" />
+
+  <!-- PWA: link to the manifest (name, icons, display mode) -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- iPhone (Safari) needs these special tags to behave like an app -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Noman Calc" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- theme.js is loaded here (no "defer") so the saved theme is applied BEFORE the page
+       is drawn. This avoids a white flash when you open the app in dark mode. -->
+  <script src="js/theme.js"></script>
+</head>
+
+<body>
+  <!-- Main app container -->
+  <main class="app">
+
+    <!-- ===== Header: logo, title, and two icon buttons ===== -->
+    <header class="topbar">
+      <div class="brand">
+        <!-- Simple inline SVG logo: gradient square with a "+" and "=" -->
+        <svg class="brand__logo" viewBox="0 0 48 48" aria-hidden="true">
+          <defs>
+            <linearGradient id="logoGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8B5CF6" />
+              <stop offset="1" stop-color="#06B6D4" />
+            </linearGradient>
+          </defs>
+          <rect width="48" height="48" rx="14" fill="url(#logoGradient)" />
+          <path d="M16 15v10M11 20h10" stroke="#fff" stroke-width="3" stroke-linecap="round" />
+          <path d="M27 17h11M27 25h11" stroke="#fff" stroke-width="3" stroke-linecap="round" />
+          <path d="M13 34h22" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7" />
+        </svg>
+        <h1 class="brand__name">Noman Calculator</h1>
+      </div>
+
+      <div class="topbar__actions">
+        <!-- Opens the history panel -->
+        <button class="icon-btn" id="historyButton" type="button" aria-label="Open calculation history">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5l3 2M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4" /></svg>
+        </button>
+        <!-- Switches dark / light theme -->
+        <button class="icon-btn" id="themeButton" type="button" aria-label="Switch between dark and light theme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== Display: shows the expression and the current number ===== -->
+    <section class="display" aria-label="Calculator display">
+      <!-- aria-live makes screen readers announce the result when it changes -->
+      <div class="display__expression" id="expression" aria-live="polite"></div>
+      <div class="display__value" id="result" aria-live="polite">0</div>
+      <button class="copy-btn" id="copyButton" type="button" aria-label="Copy result">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V6a2 2 0 0 1 2-2h9" /></svg>
+        Copy
+      </button>
+    </section>
+
+    <!-- ===== Keypad: every button has a data-action (what it does) and sometimes a data-value ===== -->
+    <section class="keypad" id="keypad" aria-label="Calculator keypad">
+      <button class="btn btn--func" data-action="clear" aria-label="All clear">AC</button>
+      <button class="btn btn--func" data-action="delete" aria-label="Delete last digit">DEL</button>
+      <button class="btn btn--func" data-action="percent" aria-label="Percent">%</button>
+      <button class="btn btn--op" data-action="operator" data-value="÷" aria-label="Divide">÷</button>
+
+      <button class="btn" data-action="digit" data-value="7">7</button>
+      <button class="btn" data-action="digit" data-value="8">8</button>
+      <button class="btn" data-action="digit" data-value="9">9</button>
+      <button class="btn btn--op" data-action="operator" data-value="×" aria-label="Multiply">×</button>
+
+      <button class="btn" data-action="digit" data-value="4">4</button>
+      <button class="btn" data-action="digit" data-value="5">5</button>
+      <button class="btn" data-action="digit" data-value="6">6</button>
+      <button class="btn btn--op" data-action="operator" data-value="−" aria-label="Subtract">−</button>
+
+      <button class="btn" data-action="digit" data-value="1">1</button>
+      <button class="btn" data-action="digit" data-value="2">2</button>
+      <button class="btn" data-action="digit" data-value="3">3</button>
+      <button class="btn btn--op" data-action="operator" data-value="+" aria-label="Add">+</button>
+
+      <button class="btn" data-action="sign" aria-label="Toggle positive or negative">+/−</button>
+      <button class="btn" data-action="digit" data-value="0">0</button>
+      <button class="btn" data-action="decimal" aria-label="Decimal point">.</button>
+      <button class="btn btn--equal" data-action="equals" aria-label="Equals">=</button>
+    </section>
+
+    <!-- ===== Footer / About ===== -->
+    <footer class="footer">Designed &amp; Developed by Noman MD</footer>
+  </main>
+
+  <!-- ===== History panel (slides up from the bottom). "inert" = cannot be focused while hidden ===== -->
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="sheet" id="historyPanel" aria-label="Calculation history" inert>
+    <div class="sheet__header">
+      <h2>History</h2>
+      <div>
+        <button class="text-btn" id="clearHistoryButton" type="button">Clear all</button>
+        <button class="text-btn" id="closeHistoryButton" type="button" aria-label="Close history">Close</button>
+      </div>
+    </div>
+    <ul class="sheet__list" id="historyList"></ul>
+  </aside>
+
+  <!-- A small message that appears for a moment (for example "Copied!") -->
+  <div class="toast" id="toast" role="status"></div>
+
+  <!-- JavaScript files. "defer" = run after the HTML is ready, in this exact order.
+       Order matters: app.js uses the objects created by the three files before it. -->
+  <script src="js/calculator.js" defer></script>
+  <script src="js/history.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

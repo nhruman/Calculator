@@ -1,0 +1,283 @@
+/* ============================================================
+   style.css - Noman Calculator
+   Sections: 1 Variables | 2 Base | 3 Layout | 4 Header | 5 Display
+             6 Keypad | 7 History panel | 8 Toast | 9 Responsive
+============================================================= */
+
+/* ---------- 1. CSS VARIABLES (colour palette) ----------
+   A variable is written as --name and used with var(--name).
+   Change a colour here and the whole app changes.
+   Dark colours are the default; the light block overrides them. */
+:root {
+  --bg: #0B1020;
+  --surface: #151B2E;
+  --surface-glass: rgba(21, 27, 46, 0.72);   /* see-through surface for the glass effect */
+  --border: rgba(255, 255, 255, 0.09);
+  --accent: #8B5CF6;                          /* primary: violet */
+  --accent-2: #06B6D4;                        /* secondary: cyan */
+  --text: #FFFFFF;
+  --text-soft: rgba(255, 255, 255, 0.6);
+  --key-bg: rgba(255, 255, 255, 0.07);
+  --key-op-bg: rgba(139, 92, 246, 0.2);
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --key-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  --glow-1: rgba(139, 92, 246, 0.35);
+  --glow-2: rgba(6, 182, 212, 0.25);
+  --radius: 22px;
+  --font: "Inter", "SF Pro Display", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+}
+
+/* Light theme: same variable names, new values. Applied when <html data-theme="light"> */
+:root[data-theme="light"] {
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-glass: rgba(255, 255, 255, 0.78);
+  --border: rgba(15, 23, 42, 0.08);
+  --accent: #7C3AED;
+  --text: #0F172A;
+  --text-soft: rgba(15, 23, 42, 0.58);
+  --key-bg: rgba(15, 23, 42, 0.05);
+  --key-op-bg: rgba(124, 58, 237, 0.12);
+  --shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  --key-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+  --glow-1: rgba(124, 58, 237, 0.18);
+  --glow-2: rgba(6, 182, 212, 0.16);
+}
+
+/* ---------- 2. BASE STYLES ---------- */
+/* border-box: padding is included in an element's width (easier maths) */
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  /* Two soft colour glows on top of the plain background = smooth gradient look */
+  background:
+    radial-gradient(circle at 15% 10%, var(--glow-1), transparent 45%),
+    radial-gradient(circle at 90% 90%, var(--glow-2), transparent 45%),
+    var(--bg);
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;                       /* no page scrolling */
+  -webkit-tap-highlight-color: transparent; /* removes grey flash when tapping on mobile */
+  user-select: none;                      /* text isn't highlighted by accident */
+  transition: background-color 0.3s;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;             /* removes the 300ms tap delay & double-tap zoom */
+}
+
+/* Visible keyboard focus (accessibility) */
+button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
+/* ---------- 3. APP LAYOUT ----------
+   100dvh = the real visible height on phones (ignores the address bar).
+   env(safe-area-inset-*) keeps content away from the notch and home bar. */
+.app {
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 880px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: calc(14px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right))
+           calc(10px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+}
+
+/* On big screens (desktop) show the app as a floating glass card */
+@media (min-width: 500px) and (min-height: 700px) {
+  .app {
+    height: 90dvh;
+    background: var(--surface-glass);
+    backdrop-filter: blur(24px);          /* the glassmorphism blur */
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: 36px;
+    box-shadow: var(--shadow);
+  }
+}
+
+/* ---------- 4. HEADER ---------- */
+.topbar { display: flex; justify-content: space-between; align-items: center; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand__logo { width: 34px; height: 34px; filter: drop-shadow(0 4px 8px var(--glow-1)); }
+.brand__name { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.2px; }
+.topbar__actions { display: flex; gap: 8px; }
+
+.icon-btn {
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border-radius: 14px;
+  background: var(--key-bg);
+  border: 1px solid var(--border);
+  transition: transform 0.15s, background 0.2s;
+}
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn svg, .copy-btn svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ---------- 5. DISPLAY ---------- */
+.display {
+  flex: 1;                                /* takes all the free space above the keypad */
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 18px 20px 16px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--key-shadow);
+  overflow: hidden;
+}
+
+.display__expression {
+  min-height: 1.4em;
+  max-width: 100%;
+  font-size: 1.05rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;                         /* when text is too long, keep the END visible */
+}
+
+.display__value {
+  max-width: 100%;
+  font-size: 3.4rem;
+  font-weight: 600;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;     /* all digits have equal width */
+  letter-spacing: -1px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: font-size 0.15s;
+}
+.display__value.is-error { color: #F87171; font-size: 1.7rem; letter-spacing: 0; }
+
+.copy-btn {
+  position: absolute; top: 12px; left: 12px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  background: transparent;
+  border-radius: 10px;
+}
+.copy-btn svg { width: 15px; height: 15px; }
+.copy-btn:active { background: var(--key-bg); }
+
+/* ---------- 6. KEYPAD ---------- */
+/* A CSS Grid: 4 equal columns. Rows share the height (minmax keeps buttons big enough). */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(56px, 9.5dvh);
+  gap: 12px;
+}
+
+.btn {
+  font-size: 1.5rem;
+  font-weight: 500;
+  background: var(--key-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--key-shadow);
+  /* transition = smooth change between two states (normal -> pressed) */
+  transition: transform 0.12s ease, filter 0.2s ease, box-shadow 0.12s ease;
+}
+/* :active = while the finger is pressing. The button shrinks a little. */
+.btn:active { transform: scale(0.92); box-shadow: none; filter: brightness(1.25); }
+
+.btn--func { font-size: 1.1rem; color: var(--accent-2); }
+.btn--op { background: var(--key-op-bg); color: var(--accent); font-size: 1.8rem; }
+.btn--equal {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 8px 20px var(--glow-1);
+  border: 0;
+  font-size: 1.9rem;
+}
+
+/* ---------- Footer (branding) ---------- */
+.footer { text-align: center; font-size: 0.74rem; color: var(--text-soft); padding-top: 2px; }
+
+/* ---------- 7. HISTORY PANEL (bottom sheet) ---------- */
+.backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.backdrop.open { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  position: fixed; left: 50%; bottom: 0;
+  width: 100%; max-width: 420px; height: 65dvh;
+  display: flex; flex-direction: column;
+  padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 28px 28px 0 0;
+  box-shadow: var(--shadow);
+  /* Hidden = moved below the screen. .open moves it back up (slide animation). */
+  transform: translate(-50%, 105%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sheet.open { transform: translate(-50%, 0); }
+
+.sheet__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.sheet__header h2 { font-size: 1.15rem; }
+.text-btn { background: none; color: var(--accent); padding: 8px 10px; font-size: 0.9rem; font-weight: 600; border-radius: 10px; }
+.sheet__list { list-style: none; padding: 0; overflow-y: auto; flex: 1; user-select: text; }
+.sheet__empty { color: var(--text-soft); text-align: center; padding: 40px 10px; }
+
+.history-item {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.history-item span { color: var(--text-soft); font-size: 0.9rem; }
+.history-item strong { font-size: 1.5rem; font-weight: 600; }
+
+/* ---------- 8. TOAST ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 20px);
+  padding: 10px 18px;
+  background: var(--accent); color: #fff;
+  font-size: 0.9rem; font-weight: 600;
+  border-radius: 999px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- 9. RESPONSIVE ---------- */
+/* Short phones (small screens): shrink text and gaps so nothing scrolls */
+@media (max-height: 700px) {
+  .app { gap: 10px; }
+  .keypad { gap: 9px; grid-auto-rows: minmax(48px, 9dvh); }
+  .display__value { font-size: 2.8rem; }
+  .btn { font-size: 1.3rem; }
+}
+
+/* People who prefer less motion get no animations */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
