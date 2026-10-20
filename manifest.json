@@ -1,7 +1,7 @@
 {
-  "name": "Noman Calculator",
-  "short_name": "Noman Calc",
-  "description": "A premium offline calculator. Designed & Developed by Noman MD.",
+  "name": "RumanMade Calculator",
+  "short_name": "RumanMade Calc",
+  "description": "A premium offline calculator. Designed & Developed by RumanMade.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
