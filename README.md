@@ -1,11 +1,11 @@
-# Noman Calculator
+# Calculator
 
 A premium, offline-ready calculator (PWA) built with HTML, CSS and vanilla JavaScript.
-**Designed & Developed by Noman MD**
+**Designed & Developed by Ruman Made**
 
 ## Folder structure
 ```
-noman-calculator/
+Calculator/
 ├── index.html            ← page structure
 ├── manifest.json         ← app name, icons, colours (PWA)
 ├── service-worker.js     ← offline caching (PWA)
@@ -21,7 +21,7 @@ noman-calculator/
 
 ## 1. Run in VS Code (Live Server)
 1. Install VS Code and the **Live Server** extension (by Ritwick Dey).
-2. `File → Open Folder…` → choose `noman-calculator`.
+2. `File → Open Folder…` → choose `calculator`.
 3. Right-click `index.html` → **Open with Live Server**. The app opens at `http://127.0.0.1:5500`.
 4. Test: press buttons, type with the keyboard, open History, toggle the theme, then reload (theme and history stay).
 5. Test offline: press F12 → **Application → Service Workers** → tick **Offline** → reload. The app still works.
@@ -37,13 +37,13 @@ Or design a square image in Canva/Figma and export it as `icon-192.png` (192×19
 
 ## 3. Deploy on GitHub Pages
 1. Create a free account at github.com.
-2. Click **New repository** → name it `noman-calculator` → **Public** → Create.
+2. Click **New repository** → name it `calculator` → **Public** → Create.
 3. Upload files: **Add file → Upload files** and drag in the *contents* of the folder (keep the `css`, `js`, `icons` folders; `index.html` must be at the top level). Click **Commit changes**.
    (Or with Git: `git init`, `git add .`, `git commit -m "first version"`, `git branch -M main`, `git remote add origin <your-repo-url>`, `git push -u origin main`.)
 4. Go to **Settings → Pages**. Under *Build and deployment* choose **Deploy from a branch**, branch **main**, folder **/ (root)**, then **Save**.
 5. Wait 1–2 minutes. Your link: `https://YOUR-USERNAME.github.io/noman-calculator/`
 
-All paths in this project are *relative* (`css/style.css`, `./index.html`), so they work inside the `/noman-calculator/` sub-folder.
+All paths in this project are *relative* (`css/style.css`, `./index.html`), so they work inside the `/calculator/` sub-folder.
 
 **Updating later:** change the files, then change `CACHE_NAME` in `service-worker.js` (`v1` → `v2`) so phones download the new version.
 
@@ -72,4 +72,4 @@ Open it once with internet so the files are cached; after that it works offline.
 - `service-worker.js` ব্যাকগ্রাউন্ডে চলে এবং সব ফাইল ফোনে সেভ (cache) করে রাখে, তাই ইন্টারনেট ছাড়াও অ্যাপ চলে।
 - ফাইল আপডেট করলে `CACHE_NAME` এর সংখ্যা বাড়াতে ভুলবেন না, নইলে ফোন পুরনো সংস্করণ দেখাবে।
 
-**GitHub Pages-এ ফাইলের পথ:** আপনার সাইট `username.github.io/noman-calculator/` এর ভেতরে থাকে, তাই আমরা `/css/style.css` এর বদলে `css/style.css` (শুরুতে `/` ছাড়া) লিখেছি। এতে পথ ঠিকঠাক কাজ করে।
+**GitHub Pages-এ ফাইলের পথ:** আপনার সাইট `username.github.io/calculator/` এর ভেতরে থাকে, তাই আমরা `/css/style.css` এর বদলে `css/style.css` (শুরুতে `/` ছাড়া) লিখেছি। এতে পথ ঠিকঠাক কাজ করে।
