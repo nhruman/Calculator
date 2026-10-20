@@ -5,7 +5,7 @@
    with JSON.stringify() and back with JSON.parse().
 ============================================================= */
 const History = (() => {
-  const STORAGE_KEY = "noman-calculator-history";
+  const STORAGE_KEY = "calculator-history";
   const MAX_ITEMS = 30; // keep only the newest 30 calculations
 
   // The list lives in this variable while the app is open.
