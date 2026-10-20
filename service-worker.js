@@ -8,7 +8,7 @@
 
 // CHANGE this name (v1 -> v2) every time you update your files,
 // so phones download the new version instead of the old cache.
-const CACHE_NAME = "rumanmade-calculator-v1";
+const CACHE_NAME = "calculator-v1";
 
 // The list of files to save for offline use
 const FILES_TO_CACHE = [

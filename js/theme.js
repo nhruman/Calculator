@@ -6,7 +6,7 @@
    - CSS reads the <html data-theme="..."> attribute to pick colours.
 ============================================================= */
 const Theme = (() => {
-  const STORAGE_KEY = "rumanmade-calculator-theme"; // the "name" of our saved value
+  const STORAGE_KEY = "calculator-theme"; // the "name" of our saved value
   const THEME_COLORS = { dark: "#0B1020", light: "#F8FAFC" }; // browser bar colours
 
   // Read the saved theme. If nothing is saved (or storage is blocked) use "dark".

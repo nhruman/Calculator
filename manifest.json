@@ -1,6 +1,6 @@
 {
   "name": "",
-  "short_name": "RumanMade Calc",
+  "short_name": "Calc",
   "description": "A premium offline calculator. Designed & Developed by RumanMade.",
   "start_url": "./index.html",
   "scope": "./",
